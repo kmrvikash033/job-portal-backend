@@ -25,13 +25,13 @@ router.post('/register',async(req,res)=>{
         });
         await user.save();  
         const token = jwt.sign({_id: user._id},process.env.TOKEN_SECRET);
-        res.json({
+        res.status(201).json({
             email: user.email,
             token
-        })
+        });
     }
     catch(err){
-        return new Error(e.message);
+        return new Error(err.message);
     }
     
 });
@@ -103,6 +103,22 @@ router.post('/updatePassword',async(req,res)=>{
         return new Error(error.message)
     }
 });
+
+router.post('/verify',async(req,res,next)=>{
+    try{
+        const token = req.headers['authorization'];
+        const verifiedToken = jwt.verify(token,process.env.TOKEN_SECRET);
+        const userId = verifiedToken.id;
+        const user = await User.findById(userId);
+        res.json({
+            email: user.email,
+            name: user.name
+        })
+    }
+    catch(e){
+        next(e);
+    }
+})
 
 
 

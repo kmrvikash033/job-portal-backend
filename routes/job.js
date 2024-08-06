@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const jobSchema = require('../schema/job.schema');
+const authMiddleware = require('../middleware/auth')
 
-router.post('/',async(req,res,next)=>{
+router.post('/',authMiddleware,async(req,res,next)=>{
     try{
         const jobInfo = req.body;
         const skills = jobInfo?.skills?.split(',')||[];
@@ -45,7 +46,7 @@ router.get('/:id',async(req,res,next)=>{
 })
 
 
-router.delete('/:id',async(req,res,next)=>{
+router.delete('/:id',authMiddleware,async(req,res,next)=>{
     try{
         const id = req.params.id;
         const job = await jobSchema.findById(id);
@@ -65,7 +66,7 @@ router.delete('/:id',async(req,res,next)=>{
 
 
 //filter and update
-router.post('/:id',async(req,res,next)=>{
+router.post('/:id',authMiddleware,async(req,res,next)=>{
     try{
         const id = req.params.id;
         const job = await jobSchema.findById(id);

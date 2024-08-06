@@ -8,6 +8,8 @@ const jobRoute  = require('./routes/job');
 const mongoose = require('mongoose');
 const fs = require('fs');
 const bodyParser = require('body-parser');
+const cors = require('cors');
+app.use(cors());
 dotenv.config();
 const port = process.env.PORT || 3000;
 app.use(bodyParser.urlencoded({extended: false}));
@@ -37,7 +39,7 @@ app.use((err,req,res,next)=>{
  
 app.use('/v1/user',user);
 app.use('/v1/auth',authRoute);
-app.use('/v1/job',authMiddleware,jobRoute);
+app.use('/v1/job',jobRoute);
 
 app.listen(port,()=>{
     console.log(`Exaple app listening on port ${port}`);
